@@ -9,7 +9,7 @@ const TablePage = () => {
 	var [tableName,setTableName] = useState("");
 	
 	useEffect(()=>{
-		fetch("http://localhost:3007/api/getOrder/"+params.id,{
+		fetch("http://localhost:3007/api/v1/home/getOrder/"+params.id,{
 			method:"GET",
 			headers:{
 				'Content-Type': 'application/json',

@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import cookies from "js-cookie";
+import Cookies from "js-cookie";
 
 
 
@@ -18,20 +18,20 @@ const LogIn = () => {
 
 	function sendData(e) {
 		e.preventDefault();
-		fetch("http://localhost:3007/api/authentication/login", {
+		fetch("http://localhost:3007/api/v1/authentication/LogIn", {
 			method: "POST",
 			headers: {
 				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify(data)
-		}).then((res) => (res.json()))
+		})
+			.then((res) => (res.json()))
 			.then((res) => {
-				if (res.status === "ok") {
-					cookies.set("token", res.token);
+				if (res.status === "OK") {
+					Cookies.set("token", res.token);
 					navigate("/");
 				}
 				setMessage(res.message)
-
 			})
 			.catch((e) => {
 				console.log(e);
@@ -54,7 +54,7 @@ const LogIn = () => {
 						onChange={handleData}></input>
 
 					<div className="d-flex p-2 justify-content-between align-items-center">
-						<button className="btn btn-primary m-2"
+						<button className="btn btn-primary m-2" type="submit"
 							onClick={sendData}>Log in</button>
 						<Link to="/signin">don't have an account?</Link>
 					</div>

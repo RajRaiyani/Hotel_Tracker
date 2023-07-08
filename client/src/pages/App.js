@@ -12,12 +12,13 @@ import Hero from "./Hero/Hero";
 const App = ()=>{
 	const [data,setData] = useState({});
 	const [isLoggedIn,setLogInStatus] = useState(false);
+
 	
 	useEffect(()=>{
 		if(!cookie.get("token")){
 			return;
 		}
-		fetch("http://localhost:3007/api/home",{
+		fetch("http://localhost:3007/api/v1/home",{
 			method: "GET",
 			headers: {
 				'Content-Type': 'application/json',
@@ -26,7 +27,8 @@ const App = ()=>{
 			// body: JSON.stringify({token:cookie.get("token")})
 		}).then(res=>res.json())
 		.then(res=>{
-			if(res.status ==="ok"){
+			console.log(res);
+			if(res.status ==="OK"){
 				setData(res.data);
 				setLogInStatus(true);
 			}
@@ -37,7 +39,7 @@ const App = ()=>{
 	if(isLoggedIn){
 		return (
 			<>
-				<Header isLoggedIn={isLoggedIn} name={data.hotelName} setLogInStatus={setLogInStatus}/>
+				<Header isLoggedIn={isLoggedIn} name={data.name} setLogInStatus={setLogInStatus}/>
 				<Outlet />
 				<Footer />
 			</>
@@ -45,7 +47,7 @@ const App = ()=>{
 	}
 	return (
 		<>
-			<Header isLoggedIn={isLoggedIn} name={data.hotelName} setLogInStatus={setLogInStatus}/>
+			<Header isLoggedIn={isLoggedIn} name={data.name} setLogInStatus={setLogInStatus}/>
 			<Hero />
 			<Footer />
 		</>

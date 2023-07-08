@@ -6,7 +6,7 @@ const Chef = () => {
 	const [order, setOrder] = useState([]);
 
 	useEffect(() => {
-		fetch("http://localhost:3007/api/chef", {
+		fetch("http://localhost:3007/api/v1/chef", {
 			method: "GET",
 			headers: {
 				'Content-Type': 'application/json',
@@ -22,7 +22,7 @@ const Chef = () => {
 	}, []);
 
 	function orderDone(orderId){
-		fetch("http://localhost:3007/api/chef/orderComplete", {
+		fetch("http://localhost:3007/api/v1/chef/orderComplete", {
 			method: "POST",
 			headers: {
 				'Content-Type': 'application/json',

@@ -8,7 +8,7 @@ const isOwnerLoggedIn = (req,res,next)=>{
 	}
 
 	try{
-		var payLoad = jwt.verify(ownerToken,process.env.owner_token_key);
+		var payLoad = jwt.verify(ownerToken,process.env.OWNER_TOKEN_KEY);
 		req.user_id=payLoad.user_id;
 		next();
 	}catch (e){

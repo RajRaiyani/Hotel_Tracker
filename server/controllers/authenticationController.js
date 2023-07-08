@@ -1,83 +1,96 @@
-const hotel = require("../models/hotel");
-const order = require("../models/order");
+
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 
+// Models ----
+const Hotel = require("../models/hotel");
+
+// utilities -----
+const validator = require("./../utility/validation/validator");
+
+
 //======================= Sign in =============================
 
-exports.SignIn = async (req,res)=>{
+exports.SignIn = async (req, res) => {
+	var { name, email, password, cpassword, ownerPassword, cownerPassword } = req.body;
 
-	try{
-		var {hotelName,email,password,cpassword,ownerPassword,cownerPassword} = req.body;
-		if(!(hotelName && email && password && cpassword && ownerPassword && cownerPassword)){
-			res.json({status:"all required",message:"All fileds are required"});
-			return;
-		}
-		if(password !== cpassword || ownerPassword !== cownerPassword){
-			res.json({status:"not match",message:"confirm password should match"});
-			return;
-		}
-		var exist = await hotel.findOne({email});
-		if(exist){
-			res.send({status:"exist",message:"alrady exist"});
-			return;
-		}
-	
-		var data = await hotel.create({
-			hotelName,email,password,ownerPassword
-		})
-		await order.create({user_id:data._id});
-		res.send({
-			status:"ok",
-			data
-		});
-	}catch(e){
-		console.log(e);
-		res.json(e);
+	if (!(name && email && password && cpassword && ownerPassword && cownerPassword))
+		return res.json({ status: "MISSING_FIELD", message: "All fields are required" });
+	if (password !== cpassword || ownerPassword !== cownerPassword)
+		return res.json({ status: "OTHER", message: "confirm password should match" });
+	if (!validator.validate("hotelName", name))
+		return res.json({ status: "INVALID", message: "Hotel Name is not in valid formate.", description: validator.info("hotelName") });
+	if (!validator.validate("email", email))
+		return res.json({ status: "INVALID", message: "email is not a vlid email address.", description: validator.info("email") });
+
+
+	try {
+
+		var exist = await Hotel.findOne({ email });
+
+		if (exist)
+			return res.send({ status: "EXIST", message: "Hotel alrady exist" });
+
+		var data = await Hotel.create({ name, email, password, ownerPassword });
+
+		res.send({ status: "OK", data });
+	} catch (error) {
+		res.json({ status: "X", message: "something went wrong while SignIn Hotel.", error });
 	}
 }
 
 //======================= Log in ============================
 
-exports.LogIn = async (req,res)=>{
+exports.LogIn = async (req, res) => {
 
-	var {email,password} = req.body;
-	if(!(email && password)){
-		return res.json({status:"all required",message:"all fileds are required"});
+	var { email, password } = req.body;
+	if (!(email && password)) {
+		return res.json({ status: "MISSING_FIELD", message: "all fields are required." });
 	}
-	var data = await hotel.findOne({email});
-	if(!data){
-		return res.json({status:"not exist",message:"User does not exist"});
-	}
-	if(await bcrypt.compare(password,data.password)){
+	try {
+		var data = await Hotel.findOne({ email });
 
-		var token = jwt.sign({user_id:data._id,email},process.env.token_key,{expiresIn:"5h"});
-		res.json({
-			status:"ok",
-			token
-		});
+		if (!data)
+			return res.json({ status: "NOT_EXIST", message: "Hotel does not exist" });
 
-	}else{
-		res.json({message:"envalid password"});
+		if (!bcrypt.compare(password, data.password))
+			return res.json({ status: "INVALID_PW", message: "envalid password" });
+
+		var token = jwt.sign({ hotel_id: data._id, email }, process.env.TOKEN_KEY, { expiresIn: "5h" });
+
+		res.json({ status: "OK", token });
+
+
+	} catch (error) {
+		res.json({ status: "X", message: "something went wrong while LogIn Hotel.", error });
 	}
+
+
 }
 
-//==========================================================================
+//========================= Owner LogIn =======================================
 
-exports.OwnerLogIn = async (req,res)=>{
-	
-	var {ownerPassword} = req.body;
-	if(!ownerPassword){
-		return res.json({status:"required",message:"password required"})
-	}
-	
-	var data = await hotel.findOne({_id:req.user_id});
+exports.OwnerLogIn = async (req, res) => {
 
-	if(await bcrypt.compare(ownerPassword,data.ownerPassword)){
-		var ownerToken = jwt.sign({user_id:data._id,email:data.email},process.env.owner_token_key,{expiresIn:"2h"});
-		res.json({status:"ok",ownerToken});
-	}else{
-		res.json({status:"invalid",message:"Invalid password"});
+	var { ownerPassword } = req.body;
+
+	if (!ownerPassword)
+		return res.json({ status: "MISSING_FIELD", message: "all fields are required." })
+
+	try {
+		var data = await Hotel.findOne({ _id: req.hotel_id });
+
+		if (!bcrypt.compare(ownerPassword, data.ownerPassword))
+			return res.json({ status: "INVALID_PW", message: "Invalid password" });
+
+		var ownerToken = jwt.sign({ hotel_id: data._id, email: data.email }, process.env.OWNER_TOKEN_KEY, { expiresIn: "2h" });
+		res.json({ status: "OK", ownerToken });
+
+	} catch (error) {
+		res.json({ status: "X", message: "something went wront while LogIn owner.", error });
 	}
+
+
+
 }

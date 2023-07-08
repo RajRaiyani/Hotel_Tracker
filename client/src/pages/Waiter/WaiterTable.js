@@ -11,11 +11,11 @@ const WaiterTable = () => {
 
 	var [tableName,setTableName] = useState("");
 	var params = useParams();
-	var items = useGetItems();
+	var [items] = useGetItems();
 	var [order, setOrder] = useState([]);
 
 	useEffect(() => {
-		fetch("http://localhost:3007/api/waiter/table/" + params.id, {
+		fetch("http://localhost:3007/api/v1/waiter/table/" + params.id, {
 			method: "GET",
 			headers: {
 				'Content-Type': 'application/json',
@@ -76,7 +76,7 @@ const WaiterTable = () => {
 	}
 	
 	function placeOrder(){
-		fetch("http://localhost:3007/api/waiter/table/placeOrder",{
+		fetch("http://localhost:3007/api/v1/waiter/table/placeOrder",{
 			method: "POST",
 			headers: {
 				'Content-Type': 'application/json',

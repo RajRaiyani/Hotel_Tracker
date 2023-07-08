@@ -12,7 +12,7 @@ const OwnerApp = ()=>{
 		if(!cookie.get("ownerToken")){
 			return navigate("/ownerlogin");	
 		}
-			fetch("http://localhost:3007/api/owner",{
+			fetch("http://localhost:3007/api/v1/owner",{
 			method: "GET",
 			headers: {
 				'Content-Type': 'application/json',

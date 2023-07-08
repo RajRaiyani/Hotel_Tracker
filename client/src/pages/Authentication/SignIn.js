@@ -8,7 +8,7 @@ const SignIn = () => {
 	var navigate = useNavigate();
 
 	const [data, setData] = useState({
-		hotelName: "",
+		name: "",
 		email: "",
 		password: "",
 		cpassword: "",
@@ -23,22 +23,22 @@ const SignIn = () => {
 		setData({ ...data, [name]: value });
 	}
 
-	function sendData() {
-		fetch("http://localhost:3007/api/authentication/signin", {
+	function sendData(e) {
+		e.preventDefault();
+		fetch("http://localhost:3007/api/v1/authentication/SignIn", {
 			method: "POST",
 			headers: {
 				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify(data)
-		}).then((res) => (res.json()))
+		})
+			.then((res) => (res.json()))
 			.then((res) => {
-				if (res.status === "ok") {
-					navigate("/login")
-					return;
+				if (res.status === "OK") {
+					return navigate("/login");
 				} else {
 					setMessage(res.message);
 				}
-
 			})
 			.catch((e) => {
 				console.log(e);
@@ -52,8 +52,9 @@ const SignIn = () => {
 				<div className="text-center fs-3">Sign in</div>
 
 				<div className="text-danger">{message}</div>
+				<form>
 				<label className="form-label">Hotel Name</label>
-				<input className="form-control" placeholder="Name" type="text" name="hotelName"
+				<input className="form-control" placeholder="Name" type="text" name="name"
 					onChange={handleData}></input>
 				<label className="form-label">Email</label>
 				<input className="form-control" placeholder="Email" type="email" name="email"
@@ -75,10 +76,11 @@ const SignIn = () => {
 					onChange={handleData}></input>
 
 				<div className="d-flex p-2 justify-content-between align-items-center">
-					<button className="btn btn-primary m-2"
+					<button className="btn btn-primary m-2" type="submit"
 						onClick={sendData}>Log in</button>
 					<Link to="/login">alrady have an account?</Link>
 				</div>
+				</form>
 
 			</div>
 		</>

@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 
 const schema = new mongoose.Schema({
-	hotelName: {
+	name: {
 		type: String,
 		require: [true, "pleas provide the Hotel Name"]
 	},

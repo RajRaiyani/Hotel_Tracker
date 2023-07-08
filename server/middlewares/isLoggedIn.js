@@ -8,8 +8,8 @@ const isLoggedIn = (req, res, next) => {
 	}
 	
 	try {
-		var payLoad = jwt.verify(token, process.env.token_key);
-		req.user_id = payLoad.user_id;
+		var payLoad = jwt.verify(token, process.env.TOKEN_KEY);
+		req.hotel_id = payLoad.hotel_id;
 		next();
 	} catch (e) {
 		res.json({ status: "expired" });

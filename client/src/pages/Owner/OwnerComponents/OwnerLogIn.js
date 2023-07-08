@@ -14,7 +14,7 @@ const OwnerLogIn = () => {
 	}
 
 	function sendData() {
-		fetch("http://localhost:3007/api/authentication/ownerlogin", {
+		fetch("http://localhost:3007/api/v1/authentication/ownerLogIn", {
 			method: "POST",
 			headers: {
 				'Content-Type': 'application/json'
@@ -22,7 +22,7 @@ const OwnerLogIn = () => {
 			body: JSON.stringify({ ownerPassword: data, token: cookies.get("token") })
 		}).then((res) => (res.json()))
 			.then((res) => {
-				if (res.status === "ok") {
+				if (res.status === "OK") {
 					cookies.set("ownerToken", res.ownerToken);
 					navigate("/owner");
 				}else{

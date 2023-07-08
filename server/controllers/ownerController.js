@@ -10,15 +10,19 @@ exports.owner = async (req,res)=>{
 
 
 exports.addTable = async (req,res)=>{
-	await table.create({user_id:req.user_id,name:req.body.tableName});
-	var data = await table.find({user_id:req.user_id});
-	res.json({status:"ok",data:data});
+
+	try{
+		var data = await table.create({hotel_id:req.hotel_id,name:req.body.tableName});
+	}catch(error){
+		return res.json({status:"X",message:"something went wrong while adding table"});
+	}
+	
+	res.json({status:"OK",data:data});
 }
 
 exports.addItem = async (req,res)=>{
-	await item.create({user_id:req.user_id,name:req.body.name,number:req.body.number,price:req.body.price});
-	var data = await item.find({user_id:req.user_id});
-	res.json({status:"ok",data:data});
+	var data = await item.create({user_id:req.user_id,name:req.body.name,number:req.body.number,price:req.body.price});
+	res.json({status:"OK",data:data});
 }
 
 

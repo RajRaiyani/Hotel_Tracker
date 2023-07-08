@@ -1,22 +1,22 @@
 
-const hotel = require("../models/hotel");
+const Hotel = require("../models/hotel");
 const item = require("../models/item");
 const table = require("../models/table");
 
 
 exports.home = async (req, res) => {
-	var data = await hotel.findOne({ _id: req.user_id },{hotelName:1});
-	res.json({ status: "ok", data });
+	var data = await Hotel.findOne({ _id: req.hotel_id },{name:1});
+	res.json({ status: "OK", data });
 }
 
-exports.getTables = async (req,res)=>{
+exports.getAllTables = async (req,res)=>{
 	var data = await table.find({user_id:req.user_id});
-	res.json({status:"ok",data:data});
+	res.json({status:"OK",data:data});
 }
 
 exports.getItems = async (req,res)=>{
 	var data = await item.find({user_id:req.user_id});
-	res.json({status:"ok",data:data});
+	res.json({status:"OK",data:data});
 }
 
 exports.getOrder = async (req,res)=>{

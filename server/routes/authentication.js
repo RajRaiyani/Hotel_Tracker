@@ -4,9 +4,9 @@ const {SignIn,LogIn,OwnerLogIn} = require("../controllers/authenticationControll
 const isLoggedIn = require("./../middlewares/isLoggedIn");
 
 
-router.route("/signin").post(SignIn);
-router.route("/login").post(LogIn);
-router.route("/ownerlogin").post(isLoggedIn,OwnerLogIn);
+router.route("/SignIn").post(SignIn);
+router.route("/LogIn").post(LogIn);
+router.route("/ownerLogIn").post(isLoggedIn,OwnerLogIn);
 
 module.exports = router;
 

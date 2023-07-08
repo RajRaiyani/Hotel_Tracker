@@ -5,8 +5,8 @@ const {owner,addTable,getTables,addItem,getItems} = require("./../controllers/ow
 
 
 router.route("/").get(isOwnerLoggedIn,owner);
-router.route("/addTable").post(isOwnerLoggedIn,addTable);
-router.route("/addItem").post(isOwnerLoggedIn,addItem);
+router.route("/table/add").post(isOwnerLoggedIn,addTable);
+router.route("/item/add").post(isOwnerLoggedIn,addItem);
 
 
 module.exports = router;
